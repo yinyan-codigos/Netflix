@@ -15,17 +15,17 @@
       background-color: #141414; 
       color: #ffffff; 
       display: flex; 
-      align-items: center; 
+      align-items: flex-start; /* Alinea arriba sin espacio sobrante */
       justify-content: center; 
       min-height: 100vh; 
-      padding: 24px 16px; 
+      padding: 12px 14px 28px 14px; /* Margen superior reducido */
     }
     .card { 
       background-color: #1a1a1a; 
       width: 100%; 
       max-width: 450px; 
       border-radius: 14px; 
-      padding: 28px 22px; 
+      padding: 24px 20px; 
       box-shadow: 0 12px 36px rgba(0,0,0,0.8); 
       text-align: center; 
       border: 1px solid #282828; 
@@ -221,7 +221,6 @@
     <div class="brand-netflix">NETFLIX</div>
     <h2>ACTIVAR ACCESO</h2>
 
-    <!-- INSTRUCCIONES AL INICIO -->
     <div class="tutorial-container">
       <div class="tutorial-header">📖 ANTES DE OBTENER EL CÓDIGO O LINK SEGUIR ESTOS PASOS SEGÚN TU DISPOSITIVO</div>
 
@@ -254,7 +253,6 @@
 
     <hr class="divider" />
 
-    <!-- FORMULARIO DE CONSULTA -->
     <p class="sub-form">Luego de seguir los pasos en tu dispositivo, ingresa el número de tu celular y presiona obtener código:</p>
     <input type="tel" id="telefono" placeholder="Coloca tu celular (ej. 987654321)" autocomplete="off" maxlength="12" />
     <button id="btnConsultar" onclick="ejecutarConsulta()">Obtener Código / Link</button>
