@@ -15,17 +15,17 @@
       background-color: #141414; 
       color: #ffffff; 
       display: flex; 
-      align-items: flex-start; /* Alinea arriba sin espacio sobrante */
+      align-items: center; 
       justify-content: center; 
       min-height: 100vh; 
-      padding: 12px 14px 28px 14px; /* Margen superior reducido */
+      padding: 34px 16px 40px 16px; /* Margen ideal: ni muy pegado ni muy abajo */
     }
     .card { 
       background-color: #1a1a1a; 
       width: 100%; 
       max-width: 450px; 
       border-radius: 14px; 
-      padding: 24px 20px; 
+      padding: 26px 22px; 
       box-shadow: 0 12px 36px rgba(0,0,0,0.8); 
       text-align: center; 
       border: 1px solid #282828; 
@@ -213,6 +213,14 @@
       0% { transform: rotate(0deg); } 
       100% { transform: rotate(360deg); } 
     }
+
+    /* Regla especial para pantallas grandes (PC y laptops) */
+    @media (min-width: 768px) {
+      body {
+        padding: 20px;
+        align-items: center; /* En PC queda balanceado y centrado */
+      }
+    }
   </style>
 </head>
 <body>
@@ -263,59 +271,4 @@
   </div>
 
   <script>
-    var API_URL = "https://script.google.com/macros/s/AKfycbyLmfhZEpSQdxd7RhvY2RqTiYToRFx8TX0t5mWMtbuWKh_7-7KuuxmaDGagUdMtNJr7/exec";
-
-    function ejecutarConsulta() {
-      var tel = document.getElementById('telefono').value;
-      var btn = document.getElementById('btnConsultar');
-      var spinner = document.getElementById('spinner');
-      var res = document.getElementById('cajaResultado');
-
-      if (!tel.trim()) {
-        alert("Por favor escribe tu número de celular.");
-        return;
-      }
-
-      btn.disabled = true;
-      spinner.style.display = 'block';
-      res.style.display = 'none';
-
-      fetch(API_URL + "?tel=" + encodeURIComponent(tel))
-        .then(function(response) {
-          return response.json();
-        })
-        .then(function(data) {
-          btn.disabled = false;
-          spinner.style.display = 'none';
-          res.style.display = 'block';
-
-          if (data.exito) {
-            res.className = "resultado exito";
-            var contenido = "<p style='color:#a5d6a7; font-size:15px;'><b>Perfil:</b> " + (data.perfil || 'Asignado') + "</p>";
-            
-            if (data.tipo === "TEMPORAL") {
-              contenido += "<p style='margin-top:8px; font-size:13px; color:#ddd;'>Haz clic en el botón blanco para abrir Netflix y ver tus 4 dígitos:</p>";
-              contenido += "<a class='btn-link' href='" + data.link + "' target='_blank'>👉 VER MI CÓDIGO TEMPORAL</a>";
-            } else {
-              contenido += "<p style='margin-top:8px; font-size:13px; color:#ddd;'>Haz clic en el botón para confirmar el hogar de tu TV:</p>";
-              contenido += "<a class='btn-link' href='" + data.link + "' target='_blank'>👉 PULSA AQUÍ PARA CONFIRMAR HOGAR</a>";
-            }
-
-            res.innerHTML = contenido;
-          } else {
-            res.className = "resultado error";
-            res.innerHTML = "<p>" + data.mensaje + "</p>";
-          }
-        })
-        .catch(function(err) {
-          btn.disabled = false;
-          spinner.style.display = 'none';
-          res.style.display = 'block';
-          res.className = "resultado error";
-          res.innerHTML = "<p>Ocurrió un error al consultar. Verifica tu conexión e intenta de nuevo.</p>";
-        });
-    }
-  </script>
-
-</body>
-</html>
+    var API_URL = "
