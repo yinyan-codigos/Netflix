@@ -287,7 +287,7 @@
       <button class="btn-action" id="btnPasoSiguiente" onclick="avanzarPaso()">¡Ya lo hice! Continuar</button>
       
       <div id="boxAlertaTv" class="alerta-box" style="display: none;" onclick="cambiarRutaTvHogar()">
-        ⚠️ ¿No te sale «Estoy de viaje»? Toca aquí para ver el método «Cambiar hogar».
+        ⚠️ ¿No te sale «Estoy de viaje»? Toca aquí para ver el método «Cambiar el hogar».
       </div>
 
       <button class="btn-secondary" onclick="irA('tutorial-menu')">Volver al selector</button>
@@ -301,77 +301,91 @@
     var pasosActuales = [];
     var indicePaso = 0;
 
-    // Flujo 1: TV - Método Principal (Estoy de viaje)
+    // Flujo 1: TV - Método Principal (Estoy de viaje) - Ahora de 4 pasos
     var pasosTvViaje = [
       {
-        indicador: "Paso 1 de 3",
+        indicador: "Paso 1 de 4",
         titulo: 'Pulsa "Esta es mi cuenta"',
         desc: "En el menú de bloqueo de tu televisor, pulsa la opción inferior.",
-        img: "https://via.placeholder.com/450x240/1a1a1a/ffffff?text=1.+Esta+es+mi+cuenta+(TV)",
-        alerta: true
+        img: "img/viaje-1.jpg",
+        alerta: false // No mostramos la alerta amarilla aquí
+      },
+      {
+        indicador: "Paso 2 de 4",
+        titulo: 'Selecciona "Estoy de viaje"',
+        desc: "Elige la opción para habilitar el uso temporal de la pantalla.",
+        img: "img/viaje-2.jpg",
+        alerta: true // La alerta amarilla ahora sale en este paso
+      },
+      {
+        indicador: "Paso 3 de 4",
+        titulo: 'Prepara el envío de correo',
+        desc: "Selecciona la opción para enviar el código a la cuenta asociada.",
+        img: "img/viaje-3.jpg",
+        alerta: false
+      },
+      {
+        indicador: "Paso 4 de 4",
+        titulo: 'Pulsa "Enviar correo" y detente',
+        desc: "Pulsa el botón de enviar. Deja tu TV en esa pantalla, no la cierres, y ven a esta web a pedir tu código.",
+        img: "img/viaje-4.jpg",
+        alerta: false
+      }
+    ];
+
+    // Flujo 2: TV - Método Alternativo (Cambiar el hogar) - Ahora de 4 pasos
+    var pasosTvHogar = [
+      {
+        indicador: "Paso 1 de 4 (Cambiar el hogar)",
+        titulo: 'Elige "Cambiar el hogar Netflix"',
+        desc: "Selecciona la opción de cambiar el hogar en el menú de tu pantalla.",
+        img: "img/hogar-1.jpg",
+        alerta: false
+      },
+      {
+        indicador: "Paso 2 de 4 (Cambiar el hogar)",
+        titulo: 'Confirma el cambio',
+        desc: "Elige una vez más la opción 'Cambiar el hogar' para validar.",
+        img: "img/hogar-2.jpg",
+        alerta: false
+      },
+      {
+        indicador: "Paso 3 de 4 (Cambiar el hogar)",
+        titulo: 'Selecciona "Enviar correo"',
+        desc: "Prepara el envío de las instrucciones a la cuenta principal.",
+        img: "img/hogar-3.jpg",
+        alerta: false
+      },
+      {
+        indicador: "Paso 4 de 4 (Cambiar el hogar)",
+        titulo: 'Envía y detente',
+        desc: "Envía el correo desde tu TV y deja esa pantalla abierta. Ahora ve a la pestaña Inicio y coloca tu número.",
+        img: "img/hogar-4.jpg",
+        alerta: false
+      }
+    ];
+
+    // Flujo 3: CELULAR / TABLET / PC - Ahora de 3 pasos
+    var pasosMovil = [
+      {
+        indicador: "Paso 1 de 3",
+        titulo: 'Presiona "Ver temporalmente"',
+        desc: "En la ventana de aviso en tu dispositivo, selecciona la opción inferior.",
+        img: "img/movil-1.jpg",
+        alerta: false
       },
       {
         indicador: "Paso 2 de 3",
-        titulo: 'Selecciona "Estoy de viaje"',
-        desc: "Elige la opción para habilitar el uso temporal de la pantalla.",
-        img: "https://via.placeholder.com/450x240/1a1a1a/ffffff?text=2.+Estoy+de+viaje+(TV)",
-        alerta: true
+        titulo: 'Selecciona "Enviar email"',
+        desc: "Prepara el envío del correo de acceso temporal.",
+        img: "img/movil-2.jpg",
+        alerta: false
       },
       {
         indicador: "Paso 3 de 3",
-        titulo: 'Selecciona "Enviar correo"',
-        desc: "Presiona enviar correo y espera 10 segundos antes de pedir tu código.",
-        img: "https://via.placeholder.com/450x240/1a1a1a/ffffff?text=3.+Enviar+correo+(TV)",
-        alerta: false
-      }
-    ];
-
-    // Flujo 2: TV - Método Alternativo (Cambiar hogar con 4 pasos)
-    var pasosTvHogar = [
-      {
-        indicador: "Paso 1 de 4 (Cambiar Hogar)",
-        titulo: 'Elige "Cambiar tu hogar Netflix"',
-        desc: "Selecciona la opción de cambiar hogar en el menú de tu pantalla.",
-        img: "https://via.placeholder.com/450x240/1a1a1a/ffffff?text=1.+Opcion+Cambiar+Hogar+(TV)",
-        alerta: false
-      },
-      {
-        indicador: "Paso 2 de 4 (Cambiar Hogar)",
-        titulo: 'Confirma "Cambiar tu hogar"',
-        desc: "Elige una vez más la opción Cambiar tu hogar para validar.",
-        img: "https://via.placeholder.com/450x240/1a1a1a/ffffff?text=2.+Confirmar+Cambiar+Hogar+(TV)",
-        alerta: false
-      },
-      {
-        indicador: "Paso 3 de 4 (Cambiar Hogar)",
-        titulo: 'Elige "Enviar correo"',
-        desc: "Envía el correo desde tu TV y luego ve a la pestaña Inicio a colocar tu número.",
-        img: "https://via.placeholder.com/450x240/1a1a1a/ffffff?text=3.+Enviar+correo+Hogar+(TV)",
-        alerta: false
-      },
-      {
-        indicador: "Paso 4 de 4 (Paso Final)",
-        titulo: 'Pulsa el botón "Confirmar cambio"',
-        desc: "Al abrir el link que te entrega la web, te saldrá esta pantalla de Netflix. Pulsa el botón negro 'Confirmar cambio' para activar tu TV.",
-        img: "https://via.placeholder.com/450x240/1a1a1a/ffffff?text=4.+Captura+Confirmar+Cambio+(Boton+Negro)",
-        alerta: false
-      }
-    ];
-
-    // Flujo 3: CELULAR / TABLET / PC
-    var pasosMovil = [
-      {
-        indicador: "Paso 1 de 2",
-        titulo: 'Presiona "Ver temporalmente"',
-        desc: "En la ventana de aviso en tu celular o PC, selecciona la opción inferior.",
-        img: "https://via.placeholder.com/450x240/1a1a1a/ffffff?text=1.+Ver+temporalmente+(Movil)",
-        alerta: false
-      },
-      {
-        indicador: "Paso 2 de 2",
-        titulo: 'Selecciona "Enviar email"',
-        desc: "Confirma el envío del correo y espera unos segundos.",
-        img: "https://via.placeholder.com/450x240/1a1a1a/ffffff?text=2.+Enviar+email+(Movil)",
+        titulo: 'Envía y espera',
+        desc: "Confirma el envío. Mantén tu pantalla abierta y ve a la pestaña Inicio para pedir tu código.",
+        img: "img/movil-3.jpg",
         alerta: false
       }
     ];
@@ -444,13 +458,18 @@
 
           if (data.exito) {
             res.className = "resultado exito";
-            var contenido = "<p style='color:#a5d6a7; font-size:15px;'><b>Perfil:</b> " + (data.perfil || 'Asignado') + "</p>";
+            var contenido = "<p style='color:#a5d6a7; font-size:15px; font-weight:bold;'>Perfil: " + (data.perfil || 'Asignado') + "</p>";
             
+            // Agregamos la muestra del correo censurado si viene del script
+            if (data.correoCensurado) {
+              contenido += "<p style='color:#81c784; font-size:12px; margin-top:2px;'>Cuenta: " + data.correoCensurado + "</p>";
+            }
+
             if (data.tipo === "TEMPORAL") {
-              contenido += "<p style='margin-top:8px; font-size:13px; color:#ddd;'>Haz clic en el botón blanco para abrir Netflix y ver tus 4 dígitos:</p>";
+              contenido += "<p style='margin-top:10px; font-size:13px; color:#ddd;'>Haz clic en el botón blanco para abrir Netflix y ver tus 4 dígitos:</p>";
               contenido += "<a class='btn-link' href='" + data.link + "' target='_blank'>👉 VER MI CÓDIGO TEMPORAL</a>";
             } else {
-              contenido += "<p style='margin-top:8px; font-size:13px; color:#ddd;'>Haz clic en el botón blanco y luego pulsa el botón negro <b>'Confirmar cambio'</b> en Netflix:</p>";
+              contenido += "<p style='margin-top:10px; font-size:13px; color:#ddd;'>Haz clic en el botón blanco y luego pulsa el botón negro <b>'Confirmar cambio'</b> en Netflix:</p>";
               contenido += "<a class='btn-link' href='" + data.link + "' target='_blank'>👉 PULSA AQUÍ PARA CONFIRMAR HOGAR</a>";
             }
 
