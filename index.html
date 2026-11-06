@@ -61,7 +61,7 @@
       border-color: #3d3d3d;
     }
 
-    .brand-netflix {
+    .brand-title {
       color: #E50914;
       font-size: 30px;
       font-weight: 900;
@@ -282,7 +282,7 @@
       <button class="tab-btn" id="tabTutorial" onclick="irA('tutorial-menu')">Tutorial</button>
     </div>
 
-    <div class="brand-netflix">PANEL STREAMING</div>
+    <div class="brand-title">PANEL STREAMING</div>
 
     <!-- ==================== VISTA 1: INICIO ==================== -->
     <div id="vistaInicio" class="view-panel active">
@@ -387,14 +387,14 @@
     var pasosTvHogar = [
       {
         indicador: "Paso 1 de 4 (Cambiar el hogar)",
-        titulo: 'Elige "Cambiar el hogar Netflix"',
+        titulo: 'Elige "Cambiar el hogar"',
         desc: "Selecciona la opción de cambiar el hogar en el menú de tu pantalla.",
         img: "img/cambiar-el-hogar-1.jpg",
         alerta: false
       },
       {
         indicador: "Paso 2 de 4 (Cambiar el hogar)",
-        titulo: 'Pulsa una vez más "cambiar el hogar netflix"',
+        titulo: 'Pulsa una vez más "cambiar el hogar"',
         desc: "Elige una vez más la opción resaltada para validar.",
         img: "img/cambiar-el-hogar-2.jpg",
         alerta: false
@@ -521,10 +521,10 @@
             }
 
             if (data.tipo === "TEMPORAL") {
-              contenido += "<p style='margin-top:10px; font-size:13px; color:#ddd;'>Haz clic en el botón blanco para abrir Netflix y ver tus 4 dígitos:</p>";
+              contenido += "<p style='margin-top:10px; font-size:13px; color:#ddd;'>Toca el botón de abajo para ver tu código de 4 dígitos:</p>";
               contenido += "<a class='btn-link' href='" + data.link + "' target='_blank'>👉 VER MI CÓDIGO TEMPORAL</a>";
             } else {
-              contenido += "<p style='margin-top:10px; font-size:13px; color:#ddd;'>Haz clic en el botón blanco y luego pulsa el botón negro <b>'Confirmar cambio'</b> en Netflix:</p>";
+              contenido += "<p style='margin-top:10px; font-size:13px; color:#ddd;'>Toca el botón de abajo y luego pulsa <b>'Confirmar cambio'</b> en la siguiente pantalla:</p>";
               contenido += "<a class='btn-link' href='" + data.link + "' target='_blank'>👉 PULSA AQUÍ PARA CONFIRMAR HOGAR</a>";
             }
 
