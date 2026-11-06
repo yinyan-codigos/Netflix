@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Panel Streaming</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22><text y=%2226%22 font-size=%2228%22>🎬</text></svg>">
   <style>
@@ -17,19 +17,22 @@
       color: #ffffff; 
       display: flex; 
       justify-content: center; 
-      align-items: flex-start;
+      align-items: center; /* Centrado vertical perfecto en celulares */
       min-height: 100vh;
-      padding: 20px 16px 40px 16px;
+      min-height: 100dvh;  /* Adapta la altura exacta del navegador móvil */
+      padding: 16px;
+      overflow-x: hidden;
     }
     .card { 
       background-color: #1a1a1a; 
       width: 100%; 
-      max-width: 460px; 
-      border-radius: 14px; 
+      max-width: 440px; 
+      border-radius: 16px; 
       padding: 24px 20px; 
       box-shadow: 0 12px 36px rgba(0,0,0,0.8); 
       text-align: center; 
       border: 1px solid #282828; 
+      margin: auto;
     }
     
     /* Pestañas superiores */
@@ -60,7 +63,7 @@
 
     .brand-netflix {
       color: #E50914;
-      font-size: 32px;
+      font-size: 30px;
       font-weight: 900;
       letter-spacing: 2px;
       margin-bottom: 4px;
@@ -68,7 +71,7 @@
     h2 { 
       color: #ffffff; 
       margin-bottom: 14px; 
-      font-size: 19px; 
+      font-size: 18px; 
       font-weight: 700;
     }
 
@@ -80,26 +83,35 @@
     .sub-form { 
       font-size: 13px; 
       color: #aaa; 
-      margin-bottom: 16px; 
+      margin-bottom: 18px; 
       line-height: 1.4; 
     }
+
+    /* Borde blanco más visible idéntico a Photoshop */
     input[type="tel"] { 
       width: 100%; 
       padding: 15px; 
-      border-radius: 8px; 
-      border: 1px solid #383838; 
-      background: #242424; 
+      border-radius: 10px; 
+      border: 1.5px solid rgba(255, 255, 255, 0.75); /* Contorno blanco elegante */
+      background: #202020; 
       color: #ffffff; 
       font-size: 17px; 
       margin-bottom: 14px; 
       outline: none; 
       text-align: center; 
       letter-spacing: 1px; 
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+      transition: all 0.2s ease;
     }
     input[type="tel"]:focus { 
-      border-color: #E50914; 
-      background: #2a2a2a; 
+      border-color: #ffffff; 
+      background: #262626; 
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
     }
+    input[type="tel"]::placeholder {
+      color: #777777;
+    }
+
     .btn-action { 
       width: 100%; 
       padding: 15px; 
@@ -137,7 +149,6 @@
       gap: 12px;
       margin: 16px 0;
     }
-    /* Tarjeta de dispositivo */
     .dev-card {
       background: #202020;
       border: 1px solid #333333;
@@ -151,15 +162,12 @@
       transition: all 0.25s ease;
       color: #cccccc;
     }
-    
     .dev-card:hover { 
       border-color: #E50914; 
       background: #262626;
       color: #ffffff;
       transform: translateY(-2px);
     }
-
-    /* Contenedor del icono */
     .icon-wrap {
       width: 44px;
       height: 44px;
@@ -168,19 +176,16 @@
       justify-content: center;
       margin-bottom: 10px;
     }
-
     .icon-wrap svg {
       width: 36px;
       height: 36px;
-      stroke: #E50914; /* Rojo Netflix en reposo */
+      stroke: #E50914;
       transition: stroke 0.2s ease, transform 0.2s ease;
     }
-
     .dev-card:hover .icon-wrap svg {
       stroke: #ff2b36;
       transform: scale(1.08);
     }
-
     .dev-card .name { 
       font-size: 14px; 
       font-weight: 700; 
@@ -265,10 +270,6 @@
       animation: girar 0.8s linear infinite; 
     }
     @keyframes girar { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-    @media (min-width: 768px) {
-      body { align-items: center; }
-    }
   </style>
 </head>
 <body>
@@ -288,7 +289,8 @@
       <h2>ACTIVAR ACCESO</h2>
       <p class="sub-form">Luego de seguir los pasos en tu dispositivo, ingresa el número de tu celular y presiona obtener código:</p>
       
-      <input type="tel" id="telefono" placeholder="Coloca tu celular (ej. 987654321)" autocomplete="off" maxlength="12" />
+      <!-- Se subió maxlength a 20 para admitir +51 con espacios completos -->
+      <input type="tel" id="telefono" placeholder="Coloca tu celular (ej. 987654321)" autocomplete="off" maxlength="20" />
       <button class="btn-action" id="btnConsultar" onclick="ejecutarConsulta()">Obtener Código / Link</button>
 
       <div class="spinner" id="spinner"></div>
@@ -303,7 +305,6 @@
       <div class="device-grid">
         <div class="dev-card" onclick="iniciarGuia('tv')">
           <div class="icon-wrap">
-            <!-- Icono Smart TV estilizado -->
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <rect x="2" y="4" width="20" height="13" rx="2" />
               <polyline points="7 21 12 17 17 21" />
@@ -314,7 +315,6 @@
 
         <div class="dev-card" onclick="iniciarGuia('movil')">
           <div class="icon-wrap">
-            <!-- Icono Celular / Dispositivo moderno -->
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <rect x="5" y="2" width="14" height="20" rx="3" />
               <line x1="10" y1="18" x2="14" y2="18" />
@@ -352,21 +352,21 @@
     var pasosActuales = [];
     var indicePaso = 0;
 
-    // Flujo 1: TV - Método Principal (Estoy de viaje) - Ahora de 4 pasos
+    // Flujo 1: TV - Método Principal (Estoy de viaje)
     var pasosTvViaje = [
       {
         indicador: "Paso 1 de 4",
         titulo: 'Pulsa "Esta es mi cuenta"',
         desc: "En la pantalla de tu televisor, pulsa la opción inferior resaltada.",
         img: "img/estoy-de-viaje-1.jpg",
-        alerta: false // No mostramos la alerta amarilla aquí
+        alerta: false
       },
       {
         indicador: "Paso 2 de 4",
         titulo: 'Selecciona "Estoy de viaje"',
         desc: "Elige la opción inferior resaltada.",
         img: "img/estoy-de-viaje-2.jpg",
-        alerta: true // La alerta amarilla ahora sale en este paso
+        alerta: true
       },
       {
         indicador: "Paso 3 de 4",
@@ -384,7 +384,7 @@
       }
     ];
 
-    // Flujo 2: TV - Método Alternativo (Cambiar el hogar) - Ahora de 4 pasos
+    // Flujo 2: TV - Método Alternativo (Cambiar el hogar)
     var pasosTvHogar = [
       {
         indicador: "Paso 1 de 4 (Cambiar el hogar)",
@@ -416,7 +416,7 @@
       }
     ];
 
-    // Flujo 3: CELULAR / TABLET / PC - Ahora de 3 pasos
+    // Flujo 3: CELULAR / TABLET / PC
     var pasosMovil = [
       {
         indicador: "Paso 1 de 3",
@@ -486,10 +486,10 @@
     }
 
     function ejecutarConsulta() {
-      // 1. Obtiene el valor y remueve espacios, guiones y el signo +
+      // 1. Remueve espacios, guiones y el signo +
       var raw = document.getElementById('telefono').value.replace(/[\s\-\+]/g, '');
 
-      // 2. Si el cliente no puso el prefijo 51 y solo escribió sus 9 dígitos (ej. 987654321), se lo antepone
+      // 2. Si sólo colocó los 9 dígitos de Perú, agrega 51
       var tel = raw;
       if (tel.length === 9) {
         tel = "51" + tel;
@@ -519,7 +519,6 @@
             res.className = "resultado exito";
             var contenido = "<p style='color:#a5d6a7; font-size:15px; font-weight:bold;'>Perfil: " + (data.perfil || 'Asignado') + "</p>";
             
-            // Agregamos la muestra del correo censurado si viene del script
             if (data.correoCensurado) {
               contenido += "<p style='color:#81c784; font-size:12px; margin-top:2px;'>Cuenta: " + data.correoCensurado + "</p>";
             }
@@ -546,13 +545,13 @@
           res.innerHTML = "<p>Ocurrió un error al consultar. Verifica tu conexión e intenta de nuevo.</p>";
         });
     }
-// 2. Permite consultar al pulsar la tecla Enter en la casilla de celular
+
+    // Permite consultar al pulsar la tecla Enter en teclado físico o táctil
     document.getElementById('telefono').addEventListener('keypress', function (e) {
       if (e.key === 'Enter') {
         ejecutarConsulta();
       }
     });
-
   </script>
 </body>
 </html>
