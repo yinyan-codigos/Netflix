@@ -17,10 +17,10 @@
       color: #ffffff; 
       display: flex; 
       justify-content: center; 
-      align-items: center; /* Centrado vertical perfecto en celulares */
+      align-items: flex-start; /* Alineado arriba para que ambas pestañas coincidan */
       min-height: 100vh;
-      min-height: 100dvh;  /* Adapta la altura exacta del navegador móvil */
-      padding: 16px;
+      min-height: 100dvh;
+      padding: 24px 16px 40px 16px; /* Distancia superior fija perfecta */
       overflow-x: hidden;
     }
     .card { 
@@ -32,7 +32,7 @@
       box-shadow: 0 12px 36px rgba(0,0,0,0.8); 
       text-align: center; 
       border: 1px solid #282828; 
-      margin: auto;
+      margin: 0 auto;
     }
     
     /* Pestañas superiores */
@@ -87,12 +87,12 @@
       line-height: 1.4; 
     }
 
-    /* Borde blanco más visible idéntico a Photoshop */
+    /* Input con borde blanco permanente y visible */
     input[type="tel"] { 
       width: 100%; 
       padding: 15px; 
       border-radius: 10px; 
-      border: 1.5px solid rgba(255, 255, 255, 0.75); /* Contorno blanco elegante */
+      border: 1.5px solid #ffffff !important; /* Blanco visible en PC y móvil */
       background: #202020; 
       color: #ffffff; 
       font-size: 17px; 
@@ -100,13 +100,13 @@
       outline: none; 
       text-align: center; 
       letter-spacing: 1px; 
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.15);
       transition: all 0.2s ease;
     }
     input[type="tel"]:focus { 
-      border-color: #ffffff; 
+      border-color: #ffffff !important; 
       background: #262626; 
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 14px rgba(255, 255, 255, 0.35);
     }
     input[type="tel"]::placeholder {
       color: #777777;
@@ -289,7 +289,6 @@
       <h2>ACTIVAR ACCESO</h2>
       <p class="sub-form">Luego de seguir los pasos en tu dispositivo, ingresa el número de tu celular y presiona obtener código:</p>
       
-      <!-- Se subió maxlength a 20 para admitir +51 con espacios completos -->
       <input type="tel" id="telefono" placeholder="Coloca tu celular (ej. 987654321)" autocomplete="off" maxlength="20" />
       <button class="btn-action" id="btnConsultar" onclick="ejecutarConsulta()">Obtener Código / Link</button>
 
@@ -486,10 +485,8 @@
     }
 
     function ejecutarConsulta() {
-      // 1. Remueve espacios, guiones y el signo +
       var raw = document.getElementById('telefono').value.replace(/[\s\-\+]/g, '');
 
-      // 2. Si sólo colocó los 9 dígitos de Perú, agrega 51
       var tel = raw;
       if (tel.length === 9) {
         tel = "51" + tel;
@@ -546,7 +543,6 @@
         });
     }
 
-    // Permite consultar al pulsar la tecla Enter en teclado físico o táctil
     document.getElementById('telefono').addEventListener('keypress', function (e) {
       if (e.key === 'Enter') {
         ejecutarConsulta();
