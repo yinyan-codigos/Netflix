@@ -137,17 +137,55 @@
       gap: 12px;
       margin: 16px 0;
     }
+    /* Tarjeta de dispositivo */
     .dev-card {
-      background: #242424;
-      border: 1px solid #383838;
-      border-radius: 10px;
-      padding: 18px 10px;
+      background: #202020;
+      border: 1px solid #333333;
+      border-radius: 12px;
+      padding: 22px 14px;
       cursor: pointer;
-      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s ease;
+      color: #cccccc;
     }
-    .dev-card:hover { border-color: #E50914; }
-    .dev-card .icon { font-size: 26px; margin-bottom: 8px; }
-    .dev-card .name { font-size: 13px; font-weight: 700; color: #fff; }
+    
+    .dev-card:hover { 
+      border-color: #E50914; 
+      background: #262626;
+      color: #ffffff;
+      transform: translateY(-2px);
+    }
+
+    /* Contenedor del icono */
+    .icon-wrap {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .icon-wrap svg {
+      width: 36px;
+      height: 36px;
+      stroke: #E50914; /* Rojo Netflix en reposo */
+      transition: stroke 0.2s ease, transform 0.2s ease;
+    }
+
+    .dev-card:hover .icon-wrap svg {
+      stroke: #ff2b36;
+      transform: scale(1.08);
+    }
+
+    .dev-card .name { 
+      font-size: 14px; 
+      font-weight: 700; 
+      letter-spacing: 0.3px;
+    }
 
     /* Pasos guiados */
     .step-indicator {
@@ -264,11 +302,24 @@
 
       <div class="device-grid">
         <div class="dev-card" onclick="iniciarGuia('tv')">
-          <div class="icon">📺</div>
+          <div class="icon-wrap">
+            <!-- Icono Smart TV estilizado -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="13" rx="2" />
+              <polyline points="7 21 12 17 17 21" />
+            </svg>
+          </div>
           <div class="name">Televisor</div>
         </div>
+
         <div class="dev-card" onclick="iniciarGuia('movil')">
-          <div class="icon">📱</div>
+          <div class="icon-wrap">
+            <!-- Icono Celular / Dispositivo moderno -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="3" />
+              <line x1="10" y1="18" x2="14" y2="18" />
+            </svg>
+          </div>
           <div class="name">Celular / PC</div>
         </div>
       </div>
