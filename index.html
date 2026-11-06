@@ -486,7 +486,15 @@
     }
 
     function ejecutarConsulta() {
-      var tel = document.getElementById('telefono').value;
+      // 1. Obtiene el valor y remueve espacios, guiones y el signo +
+      var raw = document.getElementById('telefono').value.replace(/[\s\-\+]/g, '');
+
+      // 2. Si el cliente no puso el prefijo 51 y solo escribió sus 9 dígitos (ej. 987654321), se lo antepone
+      var tel = raw;
+      if (tel.length === 9) {
+        tel = "51" + tel;
+      }
+
       var btn = document.getElementById('btnConsultar');
       var spinner = document.getElementById('spinner');
       var res = document.getElementById('cajaResultado');
