@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Panel Streaming</title>
+  
+  <!-- Configuración PWA liviana para pantalla completa en móviles -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#141414">
+  
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22><text y=%2226%22 font-size=%2228%22>🎬</text></svg>">
   <style>
     * { 
@@ -364,6 +371,7 @@
 
     var pasosActuales = [];
     var indicePaso = 0;
+    var intervaloCooldown = null;
 
     // Flujo 1: TV - Método Principal (Estoy de viaje)
     var pasosTvViaje = [
@@ -498,6 +506,29 @@
       }
     }
 
+    // Temporizador de 10 segundos para reintentos
+    function iniciarCooldown(segundos) {
+      var btn = document.getElementById('btnConsultar');
+      btn.disabled = true;
+      var restante = segundos;
+
+      if (intervaloCooldown) clearInterval(intervaloCooldown);
+
+      btn.textContent = "Reintentar en " + restante + "s...";
+
+      intervaloCooldown = setInterval(function() {
+        restante--;
+        if (restante > 0) {
+          btn.textContent = "Reintentar en " + restante + "s...";
+        } else {
+          clearInterval(intervaloCooldown);
+          intervaloCooldown = null;
+          btn.disabled = false;
+          btn.textContent = "Obtener Código / Link";
+        }
+      }, 1000);
+    }
+
     function ejecutarConsulta() {
       var raw = document.getElementById('telefono').value.replace(/[\s\-\+]/g, '');
 
@@ -515,6 +546,9 @@
         return;
       }
 
+      // Guardar el número en el celular del cliente (localStorage)
+      localStorage.setItem('panel_ultimo_telefono', document.getElementById('telefono').value);
+
       btn.disabled = true;
       spinner.style.display = 'block';
       res.style.display = 'none';
@@ -522,11 +556,12 @@
       fetch(API_URL + "?tel=" + encodeURIComponent(tel))
         .then(function(response) { return response.json(); })
         .then(function(data) {
-          btn.disabled = false;
           spinner.style.display = 'none';
           res.style.display = 'block';
 
           if (data.exito) {
+            btn.disabled = false;
+            btn.textContent = "Obtener Código / Link";
             res.className = "resultado exito";
             var contenido = "<p style='color:#a5d6a7; font-size:15px; font-weight:bold;'>Perfil: " + (data.perfil || 'Asignado') + "</p>";
             
@@ -544,16 +579,18 @@
 
             res.innerHTML = contenido;
           } else {
+            // Activa el temporizador de 10s cuando no hay solicitudes o hay error
             res.className = "resultado error";
             res.innerHTML = "<p>" + data.mensaje + "</p>";
+            iniciarCooldown(10);
           }
         })
         .catch(function(err) {
-          btn.disabled = false;
           spinner.style.display = 'none';
           res.style.display = 'block';
           res.className = "resultado error";
           res.innerHTML = "<p>Ocurrió un error al consultar. Verifica tu conexión e intenta de nuevo.</p>";
+          iniciarCooldown(10);
         });
     }
 
@@ -564,12 +601,18 @@
       }
     });
 
-    // 2. Filtro en vivo: elimina espacios y símbolos al escribir o al pegar
+    // 2. Filtro en vivo: limpia espacios y símbolos al escribir o pegar
     document.getElementById('telefono').addEventListener('input', function (e) {
       this.value = this.value.replace(/[^0-9+]/g, '');
     });
 
-    // 3. Precarga silenciosa de imágenes del tutorial
+    // 3. Autocompletar con el número guardado anteriormente
+    var telefonoGuardado = localStorage.getItem('panel_ultimo_telefono');
+    if (telefonoGuardado) {
+      document.getElementById('telefono').value = telefonoGuardado;
+    }
+
+    // 4. Precarga silenciosa de imágenes del tutorial
     function precargarImagenes() {
       var lista = [
         "img/estoy-de-viaje-1.jpg",
