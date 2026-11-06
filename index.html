@@ -213,3 +213,383 @@
       margin-bottom: 14px;
       line-height: 1.4;
     }
+
+    .img-box {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #333;
+      margin-bottom: 16px;
+      background: #111;
+      overflow: hidden;
+      min-height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .img-box img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .alerta-box {
+      background: #2a200a;
+      border: 1px solid #d49a18;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffd24d;
+      text-align: center;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .alerta-box:hover {
+      background: #3b2d0e;
+      border-color: #f1c40f;
+      transform: translateY(-1px);
+    }
+    .alerta-box:active {
+      transform: scale(0.98);
+    }
+
+    /* Spinner & Resultados */
+    .resultado { margin-top: 18px; padding: 16px; border-radius: 8px; display: none; }
+    .resultado.exito { background-color: #142e18; border: 1px solid #2e7d32; }
+    .resultado.error { background-color: #381818; border: 1px solid #c62828; color: #ffcdd2; font-size: 14px; }
+    .btn-link { 
+      display: block; 
+      margin-top: 14px; 
+      padding: 14px 18px; 
+      background-color: #ffffff; 
+      color: #000000; 
+      font-weight: 800; 
+      text-decoration: none; 
+      border-radius: 8px; 
+      font-size: 15px; 
+    }
+    .spinner { 
+      display: none; 
+      margin: 16px auto; 
+      width: 28px; 
+      height: 28px; 
+      border: 3px solid #333333; 
+      border-top: 3px solid #E50914; 
+      border-radius: 50%; 
+      animation: girar 0.8s linear infinite; 
+    }
+    @keyframes girar { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    
+    <!-- Pestañas de Navegación -->
+    <div class="nav-tabs">
+      <button class="tab-btn active" id="tabInicio" onclick="irA('inicio')">Inicio</button>
+      <button class="tab-btn" id="tabTutorial" onclick="irA('tutorial-menu')">Tutorial</button>
+    </div>
+
+    <div class="brand-title">PANEL STREAMING</div>
+
+    <!-- ==================== VISTA 1: INICIO ==================== -->
+    <div id="vistaInicio" class="view-panel active">
+      <h2>ACTIVAR ACCESO</h2>
+      <p class="sub-form">Luego de seguir los pasos en tu dispositivo, ingresa el número de tu celular y presiona obtener código:</p>
+      
+      <input type="tel" id="telefono" placeholder="Coloca tu celular (ej. 987654321)" autocomplete="off" maxlength="20" />
+      <button class="btn-action" id="btnConsultar" onclick="ejecutarConsulta()">Obtener Código / Link</button>
+
+      <div class="spinner" id="spinner"></div>
+      <div id="cajaResultado" class="resultado"></div>
+    </div>
+
+    <!-- ==================== VISTA 2: MENÚ DE DISPOSITIVOS ==================== -->
+    <div id="vistaMenuTutorial" class="view-panel">
+      <h2>¿EN QUÉ DISPOSITIVO QUIERES VER?</h2>
+      <p class="sub-form">Toca una opción para iniciar la guía paso a paso:</p>
+
+      <div class="device-grid">
+        <div class="dev-card" onclick="iniciarGuia('tv')">
+          <div class="icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="13" rx="2" />
+              <polyline points="7 21 12 17 17 21" />
+            </svg>
+          </div>
+          <div class="name">Televisor</div>
+        </div>
+
+        <div class="dev-card" onclick="iniciarGuia('movil')">
+          <div class="icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="3" />
+              <line x1="10" y1="18" x2="14" y2="18" />
+            </svg>
+          </div>
+          <div class="name">Celular / PC</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== VISTA 3: PASOS GUIADOS ==================== -->
+    <div id="vistaPasoGuia" class="view-panel">
+      <div class="step-indicator" id="guiaPasoIndicador">PASO 1 DE 3</div>
+      <div class="step-title" id="guiaPasoTitulo">Título del paso</div>
+      <div class="step-desc" id="guiaPasoDesc">Descripción de la acción.</div>
+
+      <div class="img-box">
+        <img id="guiaPasoImg" src="" alt="Paso tutorial" />
+      </div>
+
+      <button class="btn-action" id="btnPasoSiguiente" onclick="avanzarPaso()">¡Ya lo hice! Continuar</button>
+      
+      <div id="boxAlertaTv" class="alerta-box" style="display: none;" onclick="cambiarRutaTvHogar()">
+        ⚠️ ¿No te sale "Estoy de viaje"? Presiona aquí
+      </div>
+
+      <button class="btn-secondary" onclick="irA('tutorial-menu')">Volver al selector</button>
+    </div>
+
+  </div>
+
+  <script>
+    var API_URL = "https://script.google.com/macros/s/AKfycbyLmfhZEpSQdxd7RhvY2RqTiYToRFx8TX0t5mWMtbuWKh_7-7KuuxmaDGagUdMtNJr7/exec";
+
+    var pasosActuales = [];
+    var indicePaso = 0;
+
+    // Flujo 1: TV - Método Principal (Estoy de viaje)
+    var pasosTvViaje = [
+      {
+        indicador: "Paso 1 de 4",
+        titulo: 'Pulsa "Esta es mi cuenta"',
+        desc: "En la pantalla de tu televisor, pulsa la opción inferior resaltada.",
+        img: "img/estoy-de-viaje-1.jpg",
+        alerta: false
+      },
+      {
+        indicador: "Paso 2 de 4",
+        titulo: 'Selecciona "Estoy de viaje"',
+        desc: "Elige la opción inferior resaltada.",
+        img: "img/estoy-de-viaje-2.jpg",
+        alerta: true
+      },
+      {
+        indicador: "Paso 3 de 4",
+        titulo: 'Selecciona "Enviar email"',
+        desc: "Selecciona esta opción para enviar el código a la cuenta asociada.",
+        img: "img/estoy-de-viaje-3.jpg",
+        alerta: false
+      },
+      {
+        indicador: "Paso 4 de 4",
+        titulo: 'Coloca el "Código de acceso"',
+        desc: "Deja tu TV en esa pantalla, luego en esta web pulsa el botón ¡Listo!, coloca tu número y obtén tu código de acceso.",
+        img: "img/estoy-de-viaje-4.jpg",
+        alerta: false
+      }
+    ];
+
+    // Flujo 2: TV - Método Alternativo (Cambiar el hogar)
+    var pasosTvHogar = [
+      {
+        indicador: "Paso 1 de 4 (Cambiar el hogar)",
+        titulo: 'Selecciona "Cambiar el hogar"',
+        desc: "Selecciona la opción de cambiar el hogar en el menú de tu pantalla.",
+        img: "img/cambiar-el-hogar-1.jpg",
+        alerta: false
+      },
+      {
+        indicador: "Paso 2 de 4 (Cambiar el hogar)",
+        titulo: 'Pulsa de nuevo "Cambiar el hogar"',
+        desc: "Elige una vez más la opción resaltada para validar.",
+        img: "img/cambiar-el-hogar-2.jpg",
+        alerta: false
+      },
+      {
+        indicador: "Paso 3 de 4 (Cambiar el hogar)",
+        titulo: 'Selecciona "Enviar correo"',
+        desc: "Esto hará que se envie instrucciones a la cuenta principal.",
+        img: "img/cambiar-el-hogar-3.jpg",
+        alerta: false
+      },
+      {
+        indicador: "Paso 4 de 4 (Cambiar el hogar)",
+        titulo: 'Obtén tu confirmación "Link de acceso"',
+        desc: "Deja tu TV en esa pantalla, luego en esta web pulsa el botón ¡Listo!, coloca tu número y obtén tu link de acceso.",
+        img: "img/cambiar-el-hogar-4.jpg",
+        alerta: false
+      }
+    ];
+
+    // Flujo 3: CELULAR / TABLET / PC
+    var pasosMovil = [
+      {
+        indicador: "Paso 1 de 3",
+        titulo: 'Pulsa "Ver temporalmente"',
+        desc: "En la ventana de tu dispositivo, selecciona la opción inferior resaltada.",
+        img: "img/ver-temporalmente-1.jpg",
+        alerta: false
+      },
+      {
+        indicador: "Paso 2 de 3",
+        titulo: 'Selecciona "Enviar email"',
+        desc: "Selecciona esta opción para enviar el código a la cuenta asociada.",
+        img: "img/ver-temporalmente-2.jpg",
+        alerta: false
+      },
+      {
+        indicador: "Paso 3 de 3",
+        titulo: 'Coloca el "Código de acceso"',
+        desc: "Deja tu dispositivo en esa pantalla, luego en esta web pulsa el botón ¡Listo!, coloca tu número y obtén tu código.",
+        img: "img/ver-temporalmente-3.jpg",
+        alerta: false
+      }
+    ];
+
+    function irA(vista) {
+      document.getElementById('vistaInicio').classList.toggle('active', vista === 'inicio');
+      document.getElementById('vistaMenuTutorial').classList.toggle('active', vista === 'tutorial-menu');
+      document.getElementById('vistaPasoGuia').classList.toggle('active', vista === 'guia');
+      document.getElementById('tabInicio').classList.toggle('active', vista === 'inicio');
+      document.getElementById('tabTutorial').classList.toggle('active', vista !== 'inicio');
+    }
+
+    function iniciarGuia(tipo) {
+      indicePaso = 0;
+      pasosActuales = (tipo === 'tv') ? pasosTvViaje : pasosMovil;
+      cargarPaso();
+      irA('guia');
+    }
+
+    function cambiarRutaTvHogar() {
+      indicePaso = 0;
+      pasosActuales = pasosTvHogar;
+      cargarPaso();
+    }
+
+    function cargarPaso() {
+      var paso = pasosActuales[indicePaso];
+      document.getElementById('guiaPasoIndicador').textContent = paso.indicador;
+      document.getElementById('guiaPasoTitulo').textContent = paso.titulo;
+      document.getElementById('guiaPasoDesc').textContent = paso.desc;
+      document.getElementById('guiaPasoImg').src = paso.img;
+
+      document.getElementById('boxAlertaTv').style.display = paso.alerta ? 'block' : 'none';
+
+      var esUltimo = indicePaso === (pasosActuales.length - 1);
+      document.getElementById('btnPasoSiguiente').textContent = esUltimo ? "¡Listo! Obtener mi código / link" : "¡Ya lo hice! Continuar";
+    }
+
+    function avanzarPaso() {
+      if (indicePaso < pasosActuales.length - 1) {
+        indicePaso++;
+        cargarPaso();
+      } else {
+        irA('inicio');
+        document.getElementById('telefono').focus();
+      }
+    }
+
+    function ejecutarConsulta() {
+      var raw = document.getElementById('telefono').value.replace(/[\s\-\+]/g, '');
+
+      var tel = raw;
+      if (tel.length === 9) {
+        tel = "51" + tel;
+      }
+
+      var btn = document.getElementById('btnConsultar');
+      var spinner = document.getElementById('spinner');
+      var res = document.getElementById('cajaResultado');
+
+      if (!tel.trim()) {
+        alert("Por favor escribe tu número de celular.");
+        return;
+      }
+
+      btn.disabled = true;
+      spinner.style.display = 'block';
+      res.style.display = 'none';
+
+      fetch(API_URL + "?tel=" + encodeURIComponent(tel))
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+          btn.disabled = false;
+          spinner.style.display = 'none';
+          res.style.display = 'block';
+
+          if (data.exito) {
+            res.className = "resultado exito";
+            var contenido = "<p style='color:#a5d6a7; font-size:15px; font-weight:bold;'>Perfil: " + (data.perfil || 'Asignado') + "</p>";
+            
+            if (data.correoCensurado) {
+              contenido += "<p style='color:#81c784; font-size:12px; margin-top:2px;'>Cuenta: " + data.correoCensurado + "</p>";
+            }
+
+            if (data.tipo === "TEMPORAL") {
+              contenido += "<p style='margin-top:10px; font-size:13px; color:#ddd;'>Toca el botón de abajo para ver tu código de 4 dígitos:</p>";
+              contenido += "<a class='btn-link' href='" + data.link + "' target='_blank'>👉 VER MI CÓDIGO TEMPORAL</a>";
+            } else {
+              contenido += "<p style='margin-top:10px; font-size:13px; color:#ddd;'>Toca el botón de abajo y luego pulsa <b>'Confirmar cambio'</b> en la siguiente pantalla:</p>";
+              contenido += "<a class='btn-link' href='" + data.link + "' target='_blank'>👉 PULSA AQUÍ PARA CONFIRMAR HOGAR</a>";
+            }
+
+            res.innerHTML = contenido;
+          } else {
+            res.className = "resultado error";
+            res.innerHTML = "<p>" + data.mensaje + "</p>";
+          }
+        })
+        .catch(function(err) {
+          btn.disabled = false;
+          spinner.style.display = 'none';
+          res.style.display = 'block';
+          res.className = "resultado error";
+          res.innerHTML = "<p>Ocurrió un error al consultar. Verifica tu conexión e intenta de nuevo.</p>";
+        });
+    }
+
+    // 1. Enter para consultar
+    document.getElementById('telefono').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        ejecutarConsulta();
+      }
+    });
+
+    // 2. Filtro en vivo: elimina espacios y símbolos al escribir o al pegar
+    document.getElementById('telefono').addEventListener('input', function (e) {
+      this.value = this.value.replace(/[^0-9+]/g, '');
+    });
+
+    // 3. Precarga silenciosa de imágenes del tutorial
+    function precargarImagenes() {
+      var lista = [
+        "img/estoy-de-viaje-1.jpg",
+        "img/estoy-de-viaje-2.jpg",
+        "img/estoy-de-viaje-3.jpg",
+        "img/estoy-de-viaje-4.jpg",
+        "img/cambiar-el-hogar-1.jpg",
+        "img/cambiar-el-hogar-2.jpg",
+        "img/cambiar-el-hogar-3.jpg",
+        "img/cambiar-el-hogar-4.jpg",
+        "img/ver-temporalmente-1.jpg",
+        "img/ver-temporalmente-2.jpg",
+        "img/ver-temporalmente-3.jpg"
+      ];
+      lista.forEach(function(ruta) {
+        var preImg = new Image();
+        preImg.src = ruta;
+      });
+    }
+    window.addEventListener('load', precargarImagenes);
+  </script>
+</body>
+</html>
