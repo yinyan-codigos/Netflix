@@ -1,6 +1,6 @@
 {
-  "name": "Activar",
-  "short_name": "Streaming",
+  "name": "Activar Acceso",
+  "short_name": "Activar",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#141414",
