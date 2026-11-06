@@ -546,7 +546,13 @@
           res.innerHTML = "<p>Ocurrió un error al consultar. Verifica tu conexión e intenta de nuevo.</p>";
         });
     }
-  </script>
+// 2. Permite consultar al pulsar la tecla Enter en la casilla de celular
+    document.getElementById('telefono').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        ejecutarConsulta();
+      }
+    });
 
+  </script>
 </body>
 </html>
